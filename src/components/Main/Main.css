@@ -1,0 +1,14 @@
+.main{
+    max-width: 960px;
+    margin: 50px auto;
+}
+.main__main-heading{
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+}
+.main__movies-container{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    
+}
