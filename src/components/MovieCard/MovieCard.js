@@ -4,7 +4,6 @@ import "./MovieCard.css";
 
 const MovieCard = (props) => {
 const {movie} = props;
-console.log(movie);
   return (
     <div className='main__card-wrapper'>
         <div className='main__card'>
