@@ -32,6 +32,7 @@ const Header = () => {
     }, [isSearchOpen])
     useEffect(() => {
         console.log("keyword:"+keyword)
+        console.log(keyword.length)
     }, [keyword])
 
     useEffect(() => {
@@ -41,7 +42,11 @@ const Header = () => {
 
   return (
     <header className='header'>
-        <nav className={keyword.length>0 ? 'header__nav header__nav--nosearch' :  'header__nav'  }>
+        <nav className=
+        {
+            keyword ==="" ? 'header__nav' : 'header__nav header__nav--search' 
+            // keyword.length>0 ? 'header__nav header__nav--search' :  'header__nav'  
+        }>
             <div className='header__logo-wrapper'>
                 <img src={logo} alt="logo" />
             </div>
