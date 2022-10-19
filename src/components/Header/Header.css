@@ -1,0 +1,48 @@
+.header{
+    height: 100vh;
+    position: relative;
+}
+
+.header__nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px;
+}
+
+.header__logo-wrapper{
+    width: 80px;
+    display: block;
+}
+
+.header__search-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid white;
+}
+
+.header__search-icon-wrapper, .header__delete-icon-wrapper{
+    width: 20px;
+    display: block;
+    margin: 5px;
+}
+.header__search-icon-wrapper:hover{
+    cursor: pointer;
+}
+
+.header__search-icon, .header__delete-icon{
+    filter: invert(100%) sepia(96%) saturate(16%) hue-rotate(335deg) brightness(106%) contrast(103%);
+    vertical-align: middle;
+    
+}
+
+.header__search-input{
+    background-color: transparent;
+    border: none;
+    outline: none;
+}

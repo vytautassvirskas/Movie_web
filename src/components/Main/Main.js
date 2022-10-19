@@ -54,6 +54,7 @@ const Main = () => {
       </div>
       <div className='main__pagination-container'>
         <Pagination 
+        style={{color:"white"}}
           count={totalPages} 
           page={currentPage}
           color="primary" 

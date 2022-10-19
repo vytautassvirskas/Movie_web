@@ -18,6 +18,14 @@
     mask-image: linear-gradient(transparent 10%, white 250%);
     height: 50px;
 }
+.main__card:last-child .main__movie-poster {
+    position: absolute;
+    top: -50px;
+}
+.main__movie-poster{
+    display: block;
+
+}
 
 .main__movie-title{
     position: absolute;
