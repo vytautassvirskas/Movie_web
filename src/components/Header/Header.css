@@ -2,9 +2,12 @@
     height: 100vh;
     position: relative;
 }
+.header> *{
+    position: absolute;
+}
 
 .header__nav {
-    position: absolute;
+    /* position: absolute; */
     top: 0;
     left: 0;
     width: 100%;
@@ -12,6 +15,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 30px;
+    z-index: 2;
 }
 
 .header__logo-wrapper{
@@ -45,4 +49,25 @@
     background-color: transparent;
     border: none;
     outline: none;
+}
+
+.header__cover-image{
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+
+.header__cover-title{
+    position: absolute;
+    left: 50px;
+    top: 50%;
+    font-size: 3rem;
+    color: white;
+    font-weight: bold;
+
+}
+
+.header__trailer-btn{
+    top: 60%;
+    left:50px;
 }

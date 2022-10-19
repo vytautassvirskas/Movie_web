@@ -8,18 +8,30 @@ import deleteIcon from "../../assets/delete.svg"
 
 const Header = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [trendingMovie, setTrendingMovie] =useState([])
 
     const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
 
     useEffect(()=>{
-        axios.get('https://api.themoviedb.org/3/movie/now_playing?api_key='+
-        API_KEY
-        +'&language=en-US&page=1')
+        // axios.get('https://api.themoviedb.org/3/movie/now_playing?api_key='+
+        // API_KEY
+        // +'&language=en-US&page=1')
+        axios.get('https://api.themoviedb.org/3/trending/movie/day?api_key='+
+        API_KEY+'&language=de-DE&page=1')
+        .then(resp=>{
+            console.log(resp);
+            setTrendingMovie(resp.data.results[0]); //paemiau pirma is gautu
+        })
     },[])
 
     useEffect(() => {
         console.log("isSearchedOpen:"+isSearchOpen)
     }, [isSearchOpen])
+
+    useEffect(() => {
+        console.log("trendingMovie:")
+        console.log(trendingMovie)
+    }, [trendingMovie])
 
   return (
     <header className='header'>
@@ -52,6 +64,14 @@ const Header = () => {
                 </div>
                 }
         </nav>
+        <img className='header__cover-image' 
+        src={"https://image.tmdb.org/t/p/w1280"+trendingMovie.backdrop_path} 
+        alt="poster" 
+        />
+        <h1 className='header__cover-title'>{trendingMovie.title}</h1>
+        <button className='header__trailer-btn'>Play trailer</button>
+
+
     </header>
   )
 }
