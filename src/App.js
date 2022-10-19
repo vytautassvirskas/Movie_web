@@ -21,10 +21,10 @@ function App() {
     Axios.get('https://api.themoviedb.org/3/configuration?api_key='
     +API_KEY)
     .then(resp=>{
-      console.log(resp);
+      // console.log(resp);
     })
     .catch(error=>console.log(error))
-  },[])
+  },[API_KEY])
 
   return (
     <div className="App">

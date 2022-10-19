@@ -1,13 +1,10 @@
 .header{
-    height: 100vh;
+    height: 100%;
     position: relative;
-}
-.header> *{
-    position: absolute;
 }
 
 .header__nav {
-    /* position: absolute; */
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -16,6 +13,11 @@
     align-items: center;
     padding: 20px 30px;
     z-index: 2;
+}
+
+.header__nav--nosearch{
+    position: relative;
+    background-color: rgb(31, 31, 31);
 }
 
 .header__logo-wrapper{
@@ -35,8 +37,26 @@
     display: block;
     margin: 5px;
 }
+
 .header__search-icon-wrapper:hover{
     cursor: pointer;
+}
+
+.header__search-box .header__search-icon-wrapper:hover{
+    cursor: auto;
+}
+
+.header__search-box .header__delete-icon:hover{
+    cursor: pointer;
+}
+
+
+
+.header__delete-icon-wrapper{
+    width: 10px;
+}
+.header__delete-icon-wrapper:hover{
+    cursor: default;
 }
 
 .header__search-icon, .header__delete-icon{
@@ -49,6 +69,12 @@
     background-color: transparent;
     border: none;
     outline: none;
+    color: white;
+}
+
+.header__cover-container{
+    position: relative;
+    height: 50vh;
 }
 
 .header__cover-image{
@@ -68,6 +94,7 @@
 }
 
 .header__trailer-btn{
+    position: absolute;
     top: 60%;
     left:50px;
 }

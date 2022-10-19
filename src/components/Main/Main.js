@@ -1,7 +1,8 @@
 import Axios from 'axios';
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useContext} from 'react'
 import Pagination from '@mui/material/Pagination';
 
+import MainContext from '../../context/MainContext';
 import MovieCard from '../MovieCard/MovieCard';
 
 import "./Main.css"
@@ -10,10 +11,11 @@ const Main = () => {
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const {keyword, setKeyword} = useContext(MainContext);
 
   const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
 
-
+  //fetch popular movies
   useEffect(() => {
         Axios.get("https://api.themoviedb.org/3/movie/popular?api_key="
         +
@@ -39,9 +41,36 @@ const Main = () => {
         .catch((err)=>{
             console.log(err);
         })
-        console.log('ussefect called')
-  
-  },[API_KEY, currentPage])
+  },[API_KEY, currentPage, keyword===""])
+
+  //search
+  useEffect(() => {
+    if (keyword !== "") {
+      Axios.get("https://api.themoviedb.org/3/search/movie?api_key=" 
+      +
+      API_KEY
+      +
+      "&language=en-US"
+      +
+      "&query="
+      +
+      keyword
+      +
+      "&page="
+      +
+      currentPage)
+
+      .then((resp)=>{
+          console.log(resp);
+          setMovies(resp.data.results);
+          setTotalPages(resp.data.total_pages);
+          setCurrentPage(resp.data.page);
+      })
+      .catch((err)=>{
+          console.log(err);
+      })
+    }
+  },[API_KEY, currentPage, keyword])
 
   return (
     <>
