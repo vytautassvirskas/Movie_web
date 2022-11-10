@@ -5,13 +5,14 @@ import Pagination from '@mui/material/Pagination';
 import MainContext from '../../context/MainContext';
 import MovieCard from '../MovieCard/MovieCard';
 
+
 import "./Main.css"
 
 const Main = () => {
   const [movies, setMovies] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const {keyword, setKeyword} = useContext(MainContext);
+  const {keyword} = useContext(MainContext);
 
   const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
 
