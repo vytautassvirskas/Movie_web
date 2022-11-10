@@ -1,6 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react'
 import {Link} from 'react-router-dom'
 import axios from 'axios';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import MainContext from '../../context/MainContext';
 
@@ -9,13 +12,30 @@ import logo from "../../assets/movies.png"
 import searchIcon from "../../assets/search.svg"
 import deleteIcon from "../../assets/delete.svg"
 
+import MovieCard from '../MovieCard/MovieCard';
+
 const Header = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
-    const [trendingMovie, setTrendingMovie] =useState([])
+    const [trendingMovie, setTrendingMovie] =useState({})
+    const [trendingMovies, setTrendingMovies] =useState([])
+
     const [repeat, setRepeat] = useState(false);
-    const {keyword, setKeyword, setIsOpened, getTrailer, setModalData} = useContext(MainContext);
+    const {keyword, setKeyword, setIsOpened, getTrailer,getMovieDetails, setModalData} = useContext(MainContext);
 
     const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
+
+    const settings = {
+        dots: true,
+        infinite: false,
+        speed: 1000,
+        slidesToShow: 5,
+        slidesToScroll: 5,
+        autoplay: false,
+        // autoplaySpeed: 2000,
+        cssEase: "linear",
+        initialSlide: 0
+
+    };
 
 
     // setTimeout(() => {
@@ -28,7 +48,7 @@ const Header = () => {
         return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
     }
 
-    
+    //trending movies
     useEffect(()=>{
         axios.get('https://api.themoviedb.org/3/movie/now_playing?api_key='+
         API_KEY
@@ -36,9 +56,9 @@ const Header = () => {
         .then(resp=>{
             const moviePerPage=resp.data.results.length;
             const randomNumber=getRandomIntInclusive(0, moviePerPage-1);
-            console.log(randomNumber);
-            console.log(resp);
+            // console.log(resp);
             setTrendingMovie(resp.data.results[randomNumber]);
+            setTrendingMovies(resp.data.results);
         })
     },[API_KEY,repeat])
 
@@ -54,13 +74,15 @@ const Header = () => {
     useEffect(() => {
         console.log("trendingMovie:")
         console.log(trendingMovie)
-    }, [trendingMovie])
+        console.log("trendingMovies:")
+        console.log(trendingMovies)
+    }, [trendingMovie,trendingMovies])
 
   return (
-    <header className='header'>
+    <header className={keyword.length === 0 ?'header':"header--search"}>
         <nav className=
         {
-            keyword ==="" ? 'header__nav' : 'header__nav header__nav--search' 
+            keyword.length === 0 ? 'header__nav' : 'header__nav header__nav--search' 
             // keyword.length>0 ? 'header__nav header__nav--search' :  'header__nav'  
         }>
             <div className='header__logo-wrapper'>
@@ -105,12 +127,12 @@ const Header = () => {
         </nav>
         {
             keyword.length===0 &&
-            <div className='header__cover-container'>
-                    <img className='header__cover-image' 
-                    src={"https://image.tmdb.org/t/p/w1280"+trendingMovie.backdrop_path} 
-                    alt="poster" 
-                    />
-                <div className="header__cover-data">
+            <>
+            <img className='header__cover-image' 
+            src={"https://image.tmdb.org/t/p/w1280"+trendingMovie.backdrop_path} 
+            alt="poster" 
+            />
+            <div className="header__cover-data">
                     <h1 className='header__cover-title'>{trendingMovie.title}</h1>
                     <p className='header__cover-overview'>{trendingMovie.overview}</p>
                     <div className="header__btns-wrapper">
@@ -120,15 +142,26 @@ const Header = () => {
                         setIsOpened(true)
                         getTrailer(trendingMovie.id)
                         setModalData(trendingMovie)
+                        getMovieDetails(trendingMovie.id)
                     }}
                     >Play trailer</button>
                     <button className='header__more-btn'>More info</button>
                     </div>
 
                 </div>
-            </div>
-        }
 
+            <div className="header__slider-wrapper">
+                <h2 className="header__slider-title"> Trending Movies </h2>
+                <Slider {...settings}>
+                    {trendingMovies.map((movie)=>
+                        <MovieCard key={movie.id} movie={movie}/>
+                    )}
+                </Slider>
+            </div>
+            </>
+            
+        }
+        
 
     </header>
   )

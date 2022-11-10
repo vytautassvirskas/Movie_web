@@ -19,6 +19,20 @@ function App() {
   const [trailer,setTrailer]=useState(null)
   const [modalData,setModalData]=useState({})
 
+  const getMovieDetails = (movieId) => {
+    Axios.get(`https://api.themoviedb.org/3/movie/
+    ${movieId}?api_key=${API_KEY}&language=en-US`)
+    .then((resp)=>{
+      console.log(resp);
+      // setModalData(resp.data);
+      // setIsOpened(true);
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
+  }
+
+
   const getTrailer = (movieId) =>{
     Axios.get("https://api.themoviedb.org/3/movie/"+
     movieId
@@ -46,21 +60,21 @@ function App() {
   }
 
   //API configuration
-  useEffect(()=>{
-    Axios.get('https://api.themoviedb.org/3/configuration?api_key='
-    +API_KEY)
-    .then(resp=>{
-      console.log(resp);
-    })
-    .catch(error=>console.log(error))
-  },[API_KEY])
+  // useEffect(()=>{
+  //   Axios.get('https://api.themoviedb.org/3/configuration?api_key='
+  //   +API_KEY)
+  //   .then(resp=>{
+  //     console.log(resp);
+  //   })
+  //   .catch(error=>console.log(error))
+  // },[API_KEY])
 
   const contextValues = {
     keyword, setKeyword, 
     isOpened, setIsOpened,
     trailer, setTrailer,
     modalData,setModalData,
-    getTrailer
+    getTrailer, getMovieDetails
   }
 
   return (

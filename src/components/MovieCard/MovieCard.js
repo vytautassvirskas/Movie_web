@@ -10,31 +10,30 @@ const {movie} = props;
 const {getTrailer,setIsOpened,setModalData} = useContext(MainContext);
   return (
     <div 
-    className='main__card-wrapper' 
+    className='movie-card' 
     onClick={()=>{
       setModalData(movie)
       setIsOpened(true)
       getTrailer(movie.id)
       }}>
-        <div className='main__card'>
+        <div className='movie-card__wrapper'>
             <img 
-            className='main__movie-poster' 
+            className='movie-card__poster' 
             src={movie.backdrop_path ? "https://image.tmdb.org/t/p/w300"+movie.backdrop_path : CinemaImg} 
             alt="movie-poster" />
             {!movie.backdrop_path &&
-             <p className='main_movie-missing'>NO MOVIE POSTER</p>
+             <p className='movie-card__missing'>NO MOVIE POSTER</p>
              }
-            <p className='main__movie-title'>{movie.title}</p>
-            <p className='main__movie-rating'>{movie.vote_average.toFixed(1)}</p>
+            <p className='movie-card__title'>{movie.title}</p>
+            <p className='movie-card__rating'>{movie.vote_average.toFixed(1)}</p>
+            <div className='movie-card__wrapper movie-card__wrapper--rotated'>
+              <img 
+              className='movie-card__poster' 
+              src={movie.backdrop_path ? "https://image.tmdb.org/t/p/w300"+movie.backdrop_path : CinemaImg} 
+              alt="movie-poster" />
+              <p className='movie-card__title'>{movie.title}</p>
+          </div>
         </div>
-        <div className='main__card'>
-            <img 
-            className='main__movie-poster' 
-            src={movie.backdrop_path ? "https://image.tmdb.org/t/p/w300"+movie.backdrop_path : CinemaImg} 
-            alt="movie-poster" />
-            <p className='main__movie-title'>{movie.title}</p>
-        </div>
-
     </div>
   )
 }

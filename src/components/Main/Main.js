@@ -34,6 +34,7 @@ const Main = () => {
         // trailer
         // Axios.get("https://api.themoviedb.org/3/movie/550/videos?api_key="+API_KEY+"&language=en-US")
         .then((resp)=>{
+            console.log("popular movies in main:");
             console.log(resp);
             setMovies(resp.data.results);
             setTotalPages(resp.data.total_pages);
@@ -76,6 +77,19 @@ const Main = () => {
   return (
     <>
     <main className='main'>
+      <div className='main__pagination-container'>
+        <Pagination 
+        style={{color:"white"}}
+          count={totalPages} 
+          page={currentPage}
+          color="primary" 
+          defaultPage={1}
+          onChange={(e, page)=>{
+            setCurrentPage(page);
+            console.log(page);
+          }}
+          />
+      </div>
       <h2 className='main__main-heading'>Popular Movies</h2>
       <div className='main__movies-container'>
         {movies.map((movie)=>
