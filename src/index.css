@@ -57,3 +57,6 @@ body{
   /* height: 100vh; */
   font-family: 'Montserrat', sans-serif;
 }
+#root{
+  position: relative;
+}

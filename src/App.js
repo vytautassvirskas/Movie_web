@@ -18,21 +18,40 @@ function App() {
   const [isOpened, setIsOpened] = useState(false);
   const [trailer,setTrailer]=useState(null)
   const [modalData,setModalData]=useState({})
+  const [isLoading,setIsLoading]=useState(false)
 
+
+  //movie details
   const getMovieDetails = (movieId) => {
+
     Axios.get(`https://api.themoviedb.org/3/movie/
     ${movieId}?api_key=${API_KEY}&language=en-US`)
     .then((resp)=>{
-      console.log(resp);
-      // setModalData(resp.data);
-      // setIsOpened(true);
+      console.log("movie data fetch paga lD: ", resp);
+      setModalData((currentModalData)=>{
+        return {...currentModalData,moreData:resp.data}
+      })
     })
     .catch((err)=>{
       console.log(err);
     })
+
+    //credits
+    Axios.get("https://api.themoviedb.org/3/movie/"+movieId+"/credits?api_key="
+    +API_KEY+"&language=en-US")
+    .then(resp=>{
+      console.log("movie credits fetch pagal ID: ", resp);
+      setModalData((currentModalData)=>{
+        return {...currentModalData,credits:resp.data}
+      })
+   
+    })
+    .catch(err=>{
+      console.log(err)
+    })
   }
 
-
+  //movie  trailer
   const getTrailer = (movieId) =>{
     Axios.get("https://api.themoviedb.org/3/movie/"+
     movieId
@@ -56,7 +75,6 @@ function App() {
         })
       }
     })
-
   }
 
   //API configuration
@@ -64,6 +82,7 @@ function App() {
   //   Axios.get('https://api.themoviedb.org/3/configuration?api_key='
   //   +API_KEY)
   //   .then(resp=>{
+  //     console.log("API congifuration:");
   //     console.log(resp);
   //   })
   //   .catch(error=>console.log(error))
@@ -74,6 +93,7 @@ function App() {
     isOpened, setIsOpened,
     trailer, setTrailer,
     modalData,setModalData,
+    isLoading,setIsLoading,
     getTrailer, getMovieDetails
   }
 
@@ -83,7 +103,6 @@ function App() {
       <MainContext.Provider value={contextValues}>
         <Header />
         <MovieModal/>
-        {/* <Main/> */}
         <Routes>
           <Route path='/' element={<Main/>}/>
         </Routes>

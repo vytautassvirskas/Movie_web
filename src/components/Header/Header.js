@@ -6,38 +6,58 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import MainContext from '../../context/MainContext';
-
 import "./Header.css";
 import logo from "../../assets/movies.png"
 import searchIcon from "../../assets/search.svg"
 import deleteIcon from "../../assets/delete.svg"
 
+//components
 import MovieCard from '../MovieCard/MovieCard';
 
 const Header = () => {
+    const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [trendingMovie, setTrendingMovie] =useState({})
     const [trendingMovies, setTrendingMovies] =useState([])
-
     const [repeat, setRepeat] = useState(false);
-    const {keyword, setKeyword, setIsOpened, getTrailer,getMovieDetails, setModalData} = useContext(MainContext);
+    const {keyword, setKeyword, 
+        setIsOpened, getTrailer,
+        getMovieDetails, setModalData} = useContext(MainContext);
 
-    const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
-
+    //reacts slick settings
     const settings = {
         dots: true,
-        infinite: false,
+        infinite: true,
         speed: 1000,
         slidesToShow: 5,
         slidesToScroll: 5,
-        autoplay: false,
-        // autoplaySpeed: 2000,
+        autoplay: true,
+        autoplaySpeed: 5000,
         cssEase: "linear",
-        initialSlide: 0
-
+        initialSlide: 0,
+        responsive: [
+            {
+              breakpoint: 1180,
+              settings: {
+                slidesToShow: 4,
+                slidesToScroll: 4,
+                infinite: true,
+                dots: true,
+              },
+            },
+            {
+              breakpoint: 700,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                initialSlide: 2,
+              },
+            },
+        ]
     };
-
-
+    
+    //repeat
+    // keyword.trim().length===0 &&
     // setTimeout(() => {
     //     setRepeat(!repeat);
     // }, 10000);
@@ -45,10 +65,10 @@ const Header = () => {
     function getRandomIntInclusive(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
 
-    //trending movies
+    //trending movies for carousel and one trending movie for header cover
     useEffect(()=>{
         axios.get('https://api.themoviedb.org/3/movie/now_playing?api_key='+
         API_KEY
@@ -57,13 +77,20 @@ const Header = () => {
             const moviePerPage=resp.data.results.length;
             const randomNumber=getRandomIntInclusive(0, moviePerPage-1);
             // console.log(resp);
-            setTrendingMovie(resp.data.results[randomNumber]);
+    
+            if(trendingMovie.id===resp.data.results[randomNumber].id){
+                setTrendingMovie(resp.data.results[getRandomIntInclusive(0, moviePerPage-1)])
+            }else{
+                setTrendingMovie(resp.data.results[randomNumber])
+            }
             setTrendingMovies(resp.data.results);
         })
+        .catch((error) => console.log(error));
+
     },[API_KEY,repeat])
 
     // useEffect(() => {
-    //     console.log("isSearchedOpen:"+isSearchOpen)
+    //     console.log("isSearchedOpen:", isSearchOpen)
     // }, [isSearchOpen])
 
     // useEffect(() => {
@@ -72,27 +99,32 @@ const Header = () => {
     // }, [keyword])
 
     useEffect(() => {
-        console.log("trendingMovie:")
-        console.log(trendingMovie)
-        console.log("trendingMovies:")
-        console.log(trendingMovies)
+        console.log("trendingMovie:", trendingMovie)
+        console.log("trendingMovies:", trendingMovies)
     }, [trendingMovie,trendingMovies])
 
   return (
-    <header className={keyword.length === 0 ?'header':"header--search"}>
-        <nav className=
-        {
-            keyword.length === 0 ? 'header__nav' : 'header__nav header__nav--search' 
-            // keyword.length>0 ? 'header__nav header__nav--search' :  'header__nav'  
-        }>
+    <header className={keyword.trim().length === 0 ?'header':""}>
+        <nav className="header__nav">
             <div className='header__logo-wrapper'>
-                <Link to='/'>
+                <Link 
+                to='/'
+                onClick={()=>{
+                    // setSingleMovie({data:{},credits:{}}) //pakeisti i modalData
+                    setKeyword("")
+                    }}>
                     <img src={logo} alt="logo" />
                 </Link>
                 
             </div>
                 {isSearchOpen ? 
-                <div className='header__search-box'>
+                <div className='header__search-box' 
+                onClose={
+                    ()=>{
+                        setIsSearchOpen(false);
+                        setKeyword('');
+                    }
+                }>
                     <div className='header__search-icon-wrapper'>
                         <img className='header__search-icon' src={searchIcon} alt="search"></img>
                     </div>
@@ -102,8 +134,7 @@ const Header = () => {
                     type="text" 
                     placeholder='Search for a movie'
                     autoFocus
-                    // onFocus={e => console.log(e.currentTarget.select())}
-                    onBlur={()=>{setIsSearchOpen(false)}}
+                    onBlur={()=>keyword.length===0&&setIsSearchOpen(false)}
                     onChange={e=>setKeyword(e.target.value)}
                     />
                     <div className='header__delete-icon-wrapper'>
@@ -126,7 +157,7 @@ const Header = () => {
                 }
         </nav>
         {
-            keyword.length===0 &&
+            keyword.trim().length===0  &&
             <>
             <img className='header__cover-image' 
             src={"https://image.tmdb.org/t/p/w1280"+trendingMovie.backdrop_path} 
@@ -145,9 +176,7 @@ const Header = () => {
                         getMovieDetails(trendingMovie.id)
                     }}
                     >Play trailer</button>
-                    <button className='header__more-btn'>More info</button>
                     </div>
-
                 </div>
 
             <div className="header__slider-wrapper">

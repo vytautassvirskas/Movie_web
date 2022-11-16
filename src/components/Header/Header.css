@@ -7,22 +7,12 @@
     
 }
 
-.header--search{
-    position: relative;
-    display: block;
-    
-}
-
 .header__nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 60px;
     z-index: 2;
-}
-
-.header__nav--search{
-    background-color: rgb(31, 31, 31);
 }
 
 .header__logo-wrapper{
@@ -35,6 +25,7 @@
     justify-content: center;
     align-items: center;
     border: 1px solid white;
+    background-color: rgba(0,0,0,0.2);
 }
 
 .header__search-icon-wrapper, .header__delete-icon-wrapper{
@@ -142,6 +133,7 @@
 .header__more-btn{
     background-color:rgba(255, 255, 255, 0.4);
     color: rgb(251, 251, 251);
+    text-decoration: none;
    
 }
 
@@ -149,11 +141,16 @@
     background-color:rgba(255, 255, 255, 0.3);
     color: rgb(251, 251, 251);
     cursor: pointer;
+    
 }
 
 .header__slider-wrapper{
     width: 100%;
-    padding: 0 60px 5px;
+    padding: 0 80px 10px;
+}
+
+.header__slider-wrapper .movie-card {
+    margin: 0 10px;
 }
 .header__slider-wrapper .slick-dots{
     position: relative;

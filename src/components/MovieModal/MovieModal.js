@@ -34,8 +34,9 @@ const opts = {
 }
 
 const MovieModal = () => {
-    const {isOpened, setIsOpened, trailer, modalData} = useContext(MainContext);
-    console.log(trailer)
+    const {isOpened, setIsOpened, trailer, modalData,  getMovieDetails} = useContext(MainContext);
+    // console.log(trailer)
+    console.log("modalData:", modalData);
     return (
         <>
         <Modal
@@ -68,7 +69,12 @@ const MovieModal = () => {
                             <p className='modal__movie-overview'>{modalData.overview}</p>
                             <div className="modal__data-bottom">
                                 <span className='modal__movie-rating'>Rating: {modalData.vote_average&& modalData.vote_average.toFixed(1)}</span>
-                                <button className="modal__more-btn">More info</button>
+                                <button 
+                                className="modal__more-btn"
+                                onClick={() => {
+                                    getMovieDetails(modalData.id)
+                                }}
+                                >More info</button>
                             </div>
                         </div>
                     </div>
