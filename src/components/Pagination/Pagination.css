@@ -1,0 +1,35 @@
+.pagination__list{
+    display: flex;
+    align-items: center;
+    gap: 35px;
+}
+
+.pagination__link{
+    text-decoration: none;
+    color: black;
+    font: 0.8rem;
+}
+
+.pagination__link svg{
+    width: 15px;
+    height: 15px;
+    vertical-align: middle;
+
+}
+
+.pagination__item{
+    cursor: pointer;
+}
+.pagination__item--active{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(19, 16, 15);
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    
+}
+.pagination__item--active .pagination__link{
+    color: rgb(179, 179, 179);
+}

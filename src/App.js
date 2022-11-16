@@ -18,7 +18,7 @@ function App() {
   const [isOpened, setIsOpened] = useState(false);
   const [trailer,setTrailer]=useState(null)
   const [modalData,setModalData]=useState({})
-  const [isLoading,setIsLoading]=useState(false)
+  const [isLoading,setIsLoading]=useState(true)
 
 
   //movie details
@@ -63,7 +63,7 @@ function App() {
       const results=resp.data.results;
       console.log(results)
       if(results.length>0){
-        results.filter(result=>{
+        results.forEach(result=>{
           result.name==="Official Trailer" && setTrailer(result.key)
           
           if(

@@ -1,9 +1,10 @@
 import Axios from 'axios';
 import React, {useEffect, useState, useContext} from 'react'
-import Pagination from '@mui/material/Pagination';
+import Pagination2 from '@mui/material/Pagination'; //pagination
 
 import MainContext from '../../context/MainContext';
 import MovieCard from '../MovieCard/MovieCard';
+import Pagination from '../Pagination/Pagination';
 
 
 import "./Main.css"
@@ -15,6 +16,8 @@ const Main = () => {
   const {keyword} = useContext(MainContext);
 
   const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
+
+ 
 
   //fetch popular movies
   useEffect(() => {
@@ -31,11 +34,12 @@ const Main = () => {
         // zanrai
         // Axios.get("https://api.themoviedb.org/3/genre/movie/list?api_key="+API_KEY+"&language=en-US")
 
-        // trailer
-        // Axios.get("https://api.themoviedb.org/3/movie/550/videos?api_key="+API_KEY+"&language=en-US")
+      
         .then((resp)=>{
             console.log("popular movies in main:", resp);
             setMovies(resp.data.results);
+
+
             setTotalPages(resp.data.total_pages);
             setCurrentPage(resp.data.page);
         })
@@ -84,17 +88,7 @@ const Main = () => {
         movies.length>0 ?
         <main className='main'>
           <div className='main__pagination-container'>
-            <Pagination 
-            style={{color:"white"}}
-            count={totalPages} 
-            page={currentPage}
-            color="primary" 
-            defaultPage={1}
-            onChange={(e, page)=>{
-              setCurrentPage(page);
-              console.log(page);
-            }}
-            />
+            <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
           </div>
           <h2 className='main__main-heading'>Popular Movies</h2>
           <div className='main__movies-container'>
@@ -103,23 +97,13 @@ const Main = () => {
             }
           </div>
           <div className='main__pagination-container'>
-            <Pagination 
-            style={{color:"white"}}
-              count={totalPages} 
-              page={currentPage}
-              color="primary" 
-              defaultPage={1}
-              onChange={(e, page)=>{
-                setCurrentPage(page);
-                console.log(page);
-              }}
-              />
+            <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
           </div>
         </main>
         :
         <div className="message">
           {keyword.length===0 
-          ? <h2 className='message__text'>server error</h2> 
+          ? <h2 className='message__text'>server error</h2> //sita kartais rodo uzkraunant page
           : <h2 className='message__text'>Your search for "{keyword}" did not have any matches.</h2>}
         </div>
       }    

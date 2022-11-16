@@ -42,6 +42,7 @@
 } 
 
 .movie-card__poster{
+    height: 180px;
     display: block;
     object-fit: cover;
     width: 100%;
