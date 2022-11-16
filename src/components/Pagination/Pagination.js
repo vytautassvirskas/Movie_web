@@ -6,8 +6,6 @@ import "./Pagination.css"
 const Pagination = (props) => {
     const {totalPages, currentPage, setCurrentPage} = props;
 
-    // const pageNumbers = [...Array(totalPages+1).keys()].slice(1);
-
     const prevPage=()=>{
         if(currentPage>1){
             setCurrentPage(currentPage-1);
@@ -19,17 +17,17 @@ const Pagination = (props) => {
             setCurrentPage(currentPage+1);
         }
     }
-
+    
     const pageLimit=5;
-
-    // const getPaginationGroup = () => {
-    //     return [...Array(pageLimit+1).keys()].slice(1);
-    // }
+    
+    // const pageNumbers = [...Array(totalPages+1).keys()].slice(1); //first option
 
     const getPaginationGroup = () => {
         let start = Math.floor((currentPage - 1) / pageLimit) * pageLimit;
-        console.log("start", start);
-        console.log(new Array(pageLimit).fill().map((number, index) => start + index + 1))
+        if(totalPages<=pageLimit){
+            return [...Array(totalPages).keys()].map((i) => i + 1)};
+    
+        //pages numbers changes all the time
         if(currentPage>3){
             return new Array(pageLimit).fill().map((number, index) => currentPage + index-2);
         }else{

@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useContext} from 'react'
-import {Link} from 'react-router-dom'
 import axios from 'axios';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -100,22 +99,18 @@ const Header = () => {
 
     useEffect(() => {
         console.log("trendingMovie:", trendingMovie)
-        console.log("trendingMovies:", trendingMovies)
+        // console.log("trendingMovies:", trendingMovies)
     }, [trendingMovie,trendingMovies])
 
   return (
     <header className={keyword.trim().length === 0 ?'header':""}>
         <nav className="header__nav">
-            <div className='header__logo-wrapper'>
-                <Link 
-                to='/'
-                onClick={()=>{
-                    // setSingleMovie({data:{},credits:{}}) //pakeisti i modalData
-                    setKeyword("")
-                    }}>
-                    <img src={logo} alt="logo" />
-                </Link>
-                
+            <div className='header__logo-wrapper'
+            onClick={()=>{
+            // setSingleMovie({data:{},credits:{}}) //pakeisti i modalData
+            setKeyword("")
+            }}>
+                <img src={logo} alt="logo" /> 
             </div>
                 {isSearchOpen ? 
                 <div className='header__search-box' 

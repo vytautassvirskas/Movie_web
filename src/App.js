@@ -1,5 +1,4 @@
 import { useState,useEffect } from 'react';
-import {BrowserRouter,Routes,Route} from 'react-router-dom';
 import Axios from 'axios';
 
 import MainContext from './context/MainContext';
@@ -19,6 +18,8 @@ function App() {
   const [trailer,setTrailer]=useState(null)
   const [modalData,setModalData]=useState({})
   const [isLoading,setIsLoading]=useState(true)
+  const [genres, setGenres] = useState([]);
+  const [selectedGenres, setSelectedGenres] = useState([]);
 
 
   //movie details
@@ -94,20 +95,18 @@ function App() {
     trailer, setTrailer,
     modalData,setModalData,
     isLoading,setIsLoading,
+    genres, setGenres,
+    selectedGenres, setSelectedGenres,
     getTrailer, getMovieDetails
   }
 
   return (
     <>
-    <BrowserRouter>
       <MainContext.Provider value={contextValues}>
         <Header />
         <MovieModal/>
-        <Routes>
-          <Route path='/' element={<Main/>}/>
-        </Routes>
+        <Main/>
       </MainContext.Provider>
-    </BrowserRouter>
     </>
   );
 }

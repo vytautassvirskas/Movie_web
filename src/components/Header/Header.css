@@ -18,6 +18,7 @@
 .header__logo-wrapper{
     width: 80px;
     display: block;
+    cursor: pointer;
 }
 
 .header__search-box{
