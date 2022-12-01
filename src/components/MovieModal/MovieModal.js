@@ -36,7 +36,7 @@ const opts = {
 const MovieModal = () => {
     const {isOpened, setIsOpened, trailer, modalData,  getMovieDetails} = useContext(MainContext);
     
-    // console.log("modalData:", modalData);
+  
     return (
         <>
         <Modal

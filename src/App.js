@@ -15,22 +15,26 @@ function App() {
 
   const [keyword, setKeyword] = useState('');
   const [isOpened, setIsOpened] = useState(false);
-  const [trailer,setTrailer]=useState(null)
-  const [modalData,setModalData]=useState({})
-  const [isLoading,setIsLoading]=useState(true)
+  const [trailer,setTrailer]=useState(null);
+  const [modalData,setModalData]=useState({});
+  const [isLoading,setIsLoading]=useState(true);
   const [genres, setGenres] = useState([]);
+  const [showGenres, setShowGenres] = useState(true);
   const [selectedGenres, setSelectedGenres] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const[isSearchStarted, setIsSearchStarted]=useState(false);
 
 
-  //movie details
+  //more movie details for expanden modal
   const getMovieDetails = (movieId) => {
-
+    //more movie details
     Axios.get(`https://api.themoviedb.org/3/movie/
     ${movieId}?api_key=${API_KEY}&language=en-US`)
     .then((resp)=>{
-      console.log("movie data fetch paga lD: ", resp);
+      // console.log("movie data fetch paga lD: ", resp);
       setModalData((currentModalData)=>{
-        return {...currentModalData,moreData:resp.data}
+        return {...currentModalData,moreData:resp.data};
       })
     })
     .catch((err)=>{
@@ -41,9 +45,25 @@ function App() {
     Axios.get("https://api.themoviedb.org/3/movie/"+movieId+"/credits?api_key="
     +API_KEY+"&language=en-US")
     .then(resp=>{
-      console.log("movie credits fetch pagal ID: ", resp);
+      // console.log("movie credits fetch pagal ID: ", resp);
       setModalData((currentModalData)=>{
-        return {...currentModalData,credits:resp.data}
+        return {...currentModalData,credits:resp.data};
+      })
+   
+    })
+    .catch(err=>{
+      console.log(err)
+    })
+
+    //movie keywords
+    Axios.get("https://api.themoviedb.org/3/movie/"+
+    movieId
+    +"/keywords?api_key="
+    +API_KEY)
+    .then(resp=>{
+      // console.log("movie keywords fetch pagal ID: ", resp);
+      setModalData((currentModalData)=>{
+        return {...currentModalData,keywords:resp.data}
       })
    
     })
@@ -52,7 +72,12 @@ function App() {
     })
   }
 
-  //movie  trailer
+  //console log more movie details for expanded modal
+  useEffect(()=>{
+    console.log("more modalData from getmoviedetails function: ", modalData);
+  },[modalData])
+
+  //get movie  trailer
   const getTrailer = (movieId) =>{
     Axios.get("https://api.themoviedb.org/3/movie/"+
     movieId
@@ -96,7 +121,10 @@ function App() {
     modalData,setModalData,
     isLoading,setIsLoading,
     genres, setGenres,
+    showGenres, setShowGenres,
     selectedGenres, setSelectedGenres,
+    isSearchStarted, setIsSearchStarted,
+    currentPage, setCurrentPage,
     getTrailer, getMovieDetails
   }
 

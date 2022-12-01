@@ -8,6 +8,9 @@
     text-decoration: none;
     color: black;
     font: 0.8rem;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
 }
 
 .pagination__link svg{

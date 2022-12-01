@@ -20,7 +20,10 @@ const {getTrailer,setIsOpened,setModalData} = useContext(MainContext);
             <img 
             className='movie-card__poster' 
             src={movie.backdrop_path ? "https://image.tmdb.org/t/p/w780"+movie.backdrop_path : CinemaImg} 
-            alt="movie-poster" />
+            alt="movie-poster" 
+            loading='lazy'
+            
+            />
             {!movie.backdrop_path &&
              <p className='movie-card__missing'>NO MOVIE POSTER</p>
              }

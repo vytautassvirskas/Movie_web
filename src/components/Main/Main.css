@@ -1,6 +1,7 @@
 .main{
     max-width: 85vw;
     margin: 20px auto;
+    min-height: 100vh;
     /* margin: 0 auto; */
 }
 .main__main-heading{

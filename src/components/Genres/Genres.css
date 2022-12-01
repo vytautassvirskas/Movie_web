@@ -1,23 +1,41 @@
 .genres{
-    max-width: 85vw;
-    margin: 20px auto;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    
+}
+.genres__container{
+    max-width: 85vw;
+    margin: 20px auto 10px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 .genres__genre{
     background-color: rgba(0,0,0,0.5);
+    border: 1px solid  rgba(0,0,0,0.5);
     background-clip: padding-box;
     border-radius: 3px;
     line-height: 1.2;
     color: white;
     font-size: 0.8rem;
     padding: 5px; 
-    max-width: 70%;
-    text-align: right;
     cursor: pointer;
 }
 .genres__genre--active{
     background-color: rgba(148, 41, 41, 0.4);
+    border: 1px solid  rgba(148, 41, 41, 0.4);
     color: rgb(251, 251, 251);
+}
+
+
+.genres__clear-genres-wrapper{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.genres__delete-genres{
+    background-color: rgba(136, 132, 132, 0.5);
+    border: 1px solid  rgba(136, 132, 132, 0.5);
 }
