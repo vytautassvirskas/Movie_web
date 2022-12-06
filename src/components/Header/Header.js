@@ -12,18 +12,21 @@ import deleteIcon from "../../assets/delete.svg";
 
 //components
 import MovieCard from '../MovieCard/MovieCard';
+import Loader from '../Loader/Loader';
 
 const Header = () => {
+    console.log("header component start");
     const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
     const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
     const [trendingMovie, setTrendingMovie] =useState({});
     const [trendingMovies, setTrendingMovies] =useState([]);
     const [repeat, setRepeat] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const {keyword, setKeyword, 
         setIsOpened, getTrailer,
         setModalData,setShowGenres,
         isSearchStarted, setIsSearchStarted,
-        setCurrentPage
+        setSelectedGenres
     } = useContext(MainContext);
 
     //reacts slick settings
@@ -58,11 +61,19 @@ const Header = () => {
         ]
     };
     
-    //repeat
-    // !isSearchStarted &&
-    // setTimeout(() => {
-    //     setRepeat(!repeat);
-    // }, 10000);
+    // now playing movie changes every 10 seconds
+    let timer = null;
+    if(!isSearchStarted){
+        timer=setTimeout(() => {
+            setRepeat(!repeat);
+        }, 10000);
+    }else{clearTimeout(timer)}
+
+    const handleLogoClick = () => {
+        setKeyword("");
+        setSelectedGenres([]);
+        setIsSearchBarOpen(false)
+    };
 
     const getRandomIntInclusive=(min, max)=> {
         min = Math.ceil(min);
@@ -75,50 +86,64 @@ const Header = () => {
         document.querySelector("#header__search-input").focus();
     }
 
+    const randomMoviePicker = (trendingMovie, data) => {
+        const moviePerPage=data.length;
+        const randomNumber=getRandomIntInclusive(0, moviePerPage-1);
+        if(trendingMovie.id===data[randomNumber].id){
+            setTrendingMovie(data[getRandomIntInclusive(0, moviePerPage-1)]);
+        }else{
+            setTrendingMovie(data[randomNumber]);
+        }
+        
+    };
+    
+    //trending movies for carousel and one trending movie for header cover
+    useEffect(()=>{
+        console.log("1 efektas. kreipiasi i API")
+        setIsLoading(true);
+        axios.get('https://api.themoviedb.org/3/movie/now_playing?api_key='+
+        API_KEY
+        +'&language=en-US&page=1')
+        .then(resp=>{
+            // console.log("trending movie from api", resp.data.results);
+            randomMoviePicker(trendingMovie, resp.data.results);
+            setTrendingMovies(resp.data.results);
+            console.log("1 efektas. pabaiga")
+
+        })
+        .catch((error) => console.log(error))
+        .finally(()=>setIsLoading(false));
+        
+    },[API_KEY])
+    
+    
+    //trending movie changes after 10 seconds
+    useEffect(()=>{
+        trendingMovies.length>0 && randomMoviePicker(trendingMovie, trendingMovies);
+    },[repeat]);
+
     //genres on/off when search is started
     useEffect(() => {
         if(keyword.trim().length !== 0){
             setShowGenres(false);
-            setIsSearchStarted(true);     
+            setIsSearchStarted(true);
+            setSelectedGenres([]);     
+            
         }else{
             setShowGenres(true);
             setIsSearchStarted(false);
         }
     }, [keyword,setShowGenres])
 
-
-    //trending movies for carousel and one trending movie for header cover
-    useEffect(()=>{
-        axios.get('https://api.themoviedb.org/3/movie/now_playing?api_key='+
-        API_KEY
-        +'&language=en-US&page=1')
-        .then(resp=>{
-            const moviePerPage=resp.data.results.length;
-            const randomNumber=getRandomIntInclusive(0, moviePerPage-1);
-            // console.log(resp);
-    
-            if(trendingMovie.id===resp.data.results[randomNumber].id){
-                setTrendingMovie(resp.data.results[getRandomIntInclusive(0, moviePerPage-1)]);
-            }else{
-                setTrendingMovie(resp.data.results[randomNumber]);
-            }
-            setTrendingMovies(resp.data.results);
-        })
-        .catch((error) => console.log(error));
-
-    },[API_KEY,repeat])
-
-
-    // useEffect(() => {
-    //     console.log("trendingMovie:", trendingMovie)
-    //     console.log("trendingMovies:", trendingMovies)
-    // }, [trendingMovie,trendingMovies])
-
-  return (
-    <header className={!isSearchStarted ?'header':""}>
+    if (isLoading) {
+        // return <div className="loading">Loading...</div>;
+        return <Loader/>
+    }
+    return (
+        <header className={!isSearchStarted ?'header':""}>
         <nav className="header__nav">
             <div className='header__logo-wrapper'
-            onClick={()=>setKeyword("")}>
+            onClick={handleLogoClick}>
                 <img src={logo} alt="logo" /> 
             </div>
                 {isSearchBarOpen ? 
@@ -137,7 +162,6 @@ const Header = () => {
                         onBlur={()=>!isSearchStarted&&setIsSearchBarOpen(false)}
                         onChange={(e)=>{
                             setKeyword(e.target.value)
-                            setCurrentPage(1);
                         }}
                         />
                         <div className='header__delete-icon-wrapper'>
@@ -158,7 +182,7 @@ const Header = () => {
                         <img className='header__search-icon' src={searchIcon} alt="search"></img>
                     </div>
                 }
-        </nav>
+        </nav>{console.log("renderinasi JSX")}
         {
             !isSearchStarted  &&
             <>

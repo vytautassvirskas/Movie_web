@@ -22,6 +22,8 @@ function App() {
   const [showGenres, setShowGenres] = useState(true);
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterByGenres, setFilterByGenres] = useState(false);
+
 
   const[isSearchStarted, setIsSearchStarted]=useState(false);
 
@@ -73,9 +75,9 @@ function App() {
   }
 
   //console log more movie details for expanded modal
-  useEffect(()=>{
-    console.log("more modalData from getmoviedetails function: ", modalData);
-  },[modalData])
+  // useEffect(()=>{
+  //   console.log("more modalData from getmoviedetails function: ", modalData);
+  // },[modalData])
 
   //get movie  trailer
   const getTrailer = (movieId) =>{
@@ -125,6 +127,7 @@ function App() {
     selectedGenres, setSelectedGenres,
     isSearchStarted, setIsSearchStarted,
     currentPage, setCurrentPage,
+    filterByGenres, setFilterByGenres,
     getTrailer, getMovieDetails
   }
 

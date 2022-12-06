@@ -7,13 +7,12 @@ import "./Genres.css"
 const Genres = (props) => {
     const{setCurrentPage}=props
     const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
-    const {genres, setGenres,selectedGenres, setSelectedGenres, showGenres} = useContext(MainContext);
+    const {genres, setGenres,selectedGenres, setSelectedGenres, showGenres,setFilterByGenres} = useContext(MainContext);
 
       //fetch genres of movies
     useEffect(()=>{
     Axios.get("https://api.themoviedb.org/3/genre/movie/list?api_key="+API_KEY+"&language=en-US")
-    .then(resp=>{
-      // console.log("genres: ", resp);
+    .then(resp=>{;
       setGenres(resp.data.genres);
     })
     .catch(err=>{
@@ -21,9 +20,14 @@ const Genres = (props) => {
       
     })
     },[API_KEY])
-    useEffect(()=>{
-      console.log("selectedGenres: ", selectedGenres);
+
+    useEffect(() => {
+      selectedGenres.length > 0 ? setFilterByGenres(true) : setFilterByGenres(false);
     },[selectedGenres])
+
+    // useEffect(()=>{
+    //   console.log("selectedGenres: ", selectedGenres);
+    // },[selectedGenres])
 
     const handleAdd = (genreId) => {
       setSelectedGenres([...selectedGenres, genreId]);
