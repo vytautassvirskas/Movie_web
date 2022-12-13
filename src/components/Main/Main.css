@@ -1,7 +1,7 @@
 .main{
     max-width: 85vw;
     margin: 0 auto;
-    min-height: 100vh;
+    min-height: calc(100vh - 147.05px); /*minus genres div height*/
     padding-bottom: 20px;
     position: relative;
     display: flex;
@@ -49,4 +49,25 @@
     font-weight: 700;
     color: white;
     text-align: center;
+}
+
+@media (width<=1300px){
+    .main__movies-container{
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (width<=1000px){
+    .main__movies-container{
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (width<=768px){
+    .main__main-heading{
+        font-size: 1.2rem;
+    }
+    .main__movies-container{
+        grid-template-columns: repeat(2, 1fr);
+    }
 }

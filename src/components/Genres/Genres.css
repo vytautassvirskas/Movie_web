@@ -39,3 +39,9 @@
     background-color: rgba(136, 132, 132, 0.5);
     border: 1px solid  rgba(136, 132, 132, 0.5);
 }
+
+@media (width<=768px){
+    .genres__container{
+        gap: 8px;
+    }
+}

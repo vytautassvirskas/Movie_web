@@ -36,3 +36,9 @@
 .pagination__item--active .pagination__link{
     color: rgb(179, 179, 179);
 }
+
+@media (width<=768px){
+    .pagination__list{
+        gap: 15px
+    }
+}

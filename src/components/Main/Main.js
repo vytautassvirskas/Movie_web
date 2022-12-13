@@ -22,21 +22,22 @@ export function useDebounce(value, delay) {
     return () => clearTimeout(timeoutId);
   }, [value,delay]);
 
-  return debounceValue;
+  return debounceValue.trim();
 }
 
 const Main = () => {
   const [movies, setMovies] = useState([]);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const {keyword,selectedGenres,isSearchStarted,currentPage, setCurrentPage,filterByGenres} = useContext(MainContext);
-  const debounceValue = useDebounce(keyword, 800);
+  const {keyword,selectedGenres,currentPage, setCurrentPage} = useContext(MainContext);
+  const debounceKeyword = useDebounce(keyword, 800);
   const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
-
+  
 
   //fetch popular movies
   useEffect(() => {
-      if (!isSearchStarted) 
+      if (keyword.trim().length===0) 
     { 
       setIsLoading(true);
       Axios.get("https://api.themoviedb.org/3/discover/movie?api_key="
@@ -63,13 +64,13 @@ const Main = () => {
               setIsLoading(false);
           })
       }
-  },[API_KEY, currentPage, debounceValue==="", selectedGenres,isSearchStarted])
+  },[API_KEY, currentPage, keyword, selectedGenres])
 
 
   //search
 
   useEffect(() => {
-    if (isSearchStarted) 
+    if (debounceKeyword.length>0) 
     {
       setIsLoading(true);
       Axios.get("https://api.themoviedb.org/3/search/movie?api_key=" 
@@ -80,7 +81,7 @@ const Main = () => {
       +
       "&query="
       +
-      keyword
+      debounceKeyword
       +
       "&page="
       +
@@ -100,7 +101,7 @@ const Main = () => {
      
 
     }
-  }, [debounceValue,API_KEY, currentPage,isSearchStarted]);
+  }, [debounceKeyword,API_KEY, currentPage]);
 
   if(isLoading) return <Loader/>
   return (
@@ -109,13 +110,14 @@ const Main = () => {
       {
         movies.length>0 ?
         <main className='main'>
-          <Genres setCurrentPage={setCurrentPage}></Genres>
+          
+          
           <div className='main__pagination-container'>
             <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
           </div>
-          {filterByGenres?<h2 className='main__main-heading'>Movies by Genre</h2>
+          {selectedGenres.length>0?<h2 className='main__main-heading'>Movies by Genre</h2>
           :
-          isSearchStarted?<h2 className='main__main-heading'>Search Results</h2>
+          keyword.trim().length>0?<h2 className='main__main-heading'>Search Results</h2>
           :<h2 className='main__main-heading'>Popular Movies</h2>}
           <div className='main__movies-container'>
             {movies.map((movie)=>
@@ -128,7 +130,7 @@ const Main = () => {
         </main>
         :
         <>
-          {isSearchStarted&&movies.length===0
+          {debounceKeyword.length>0&&movies.length===0
           ? 
           (
             <div className="message">
@@ -137,7 +139,7 @@ const Main = () => {
           
           )
           : null}
-          {filterByGenres&&movies.length===0 ? 
+          {selectedGenres.length>0&&movies.length===0 ? 
           <>
           <main className='main'>
             <Genres setCurrentPage={setCurrentPage}></Genres>

@@ -1,5 +1,4 @@
 .modal{
-    /* width: 50vh; */
     color: white;
     background-color: black;
     padding: 0;
@@ -14,6 +13,9 @@
 
 .modal__youtube{
     margin: 25px 0;
+}
+.modal__youtube-missing{
+    text-align: center;
 }
 
 .modal__data{
@@ -31,8 +33,7 @@
     object-fit: cover;
     object-position: top;
     z-index: -1;
-    filter: opacity(0.5);
-    filter: contrast(0.9);
+    opacity: 0.5;
 }
 .modal__movie-title{
     font-size: 2rem;
@@ -72,4 +73,17 @@
     background-color:rgba(255, 255, 255, 0.3);
     color: rgb(251, 251, 251);
     cursor: pointer;
+}
+@media (width<=768px){
+ .modal{
+    max-width: 90vw;
+    min-width: 90vw;
+ }
+ .modal__data{
+    padding: 20px;
+ }
+ .modal__movie-overview{
+    font-size: 0.9rem;
+    line-height: 1.3;
+ }
 }

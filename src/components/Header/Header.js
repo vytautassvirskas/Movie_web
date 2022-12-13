@@ -3,30 +3,24 @@ import axios from 'axios';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 import MainContext from '../../context/MainContext';
 import "./Header.css";
 import logo from "../../assets/movies.png";
 import searchIcon from "../../assets/search.svg";
 import deleteIcon from "../../assets/delete.svg";
-
-//components
 import MovieCard from '../MovieCard/MovieCard';
 import Loader from '../Loader/Loader';
+import { getRandomIntInclusive } from '../../utils/utils';
 
 const Header = () => {
-    console.log("header component start");
     const API_KEY=process.env.REACT_APP_TMDB_API_KEY;
     const [isSearchBarOpen, setIsSearchBarOpen] = useState(false);
     const [trendingMovie, setTrendingMovie] =useState({});
     const [trendingMovies, setTrendingMovies] =useState([]);
     const [repeat, setRepeat] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const {keyword, setKeyword, 
-        setIsOpened, getTrailer,
-        setModalData,setShowGenres,
-        isSearchStarted, setIsSearchStarted,
-        setSelectedGenres
+    const {keyword, setKeyword,
+        setSelectedGenres, handleModal,setCurrentPage,isSearchStarted,setIsSearchStarted
     } = useContext(MainContext);
 
     //reacts slick settings
@@ -42,7 +36,7 @@ const Header = () => {
         initialSlide: 0,
         responsive: [
             {
-              breakpoint: 1180,
+              breakpoint: 1550,
               settings: {
                 slidesToShow: 4,
                 slidesToScroll: 4,
@@ -51,69 +45,107 @@ const Header = () => {
               },
             },
             {
+                breakpoint: 1350,
+                settings: {
+                  slidesToShow: 3,
+                  slidesToScroll: 3,
+                  infinite: true,
+                  dots: true,
+                },
+            },
+            {
+                breakpoint: 1000,
+                settings: {
+                  slidesToShow: 2,
+                  slidesToScroll: 2,
+                  infinite: true,
+                  dots: true,
+                },
+            },
+            {
               breakpoint: 700,
               settings: {
-                slidesToShow: 2,
-                slidesToScroll: 2,
-                initialSlide: 2,
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                initialSlide: 1,
+                infinite: true,
+                dots: false,
               },
             },
         ]
     };
     
     // now playing movie changes every 10 seconds
-    let timer = null;
-    if(!isSearchStarted){
-        timer=setTimeout(() => {
-            setRepeat(!repeat);
-        }, 10000);
-    }else{clearTimeout(timer)}
+    const movieChanger = (delay) => {
+        let timerMovie = null;
+        if(keyword.trim().length===0){
+            timerMovie=setTimeout(() => {
+                setRepeat(!repeat);
+            }, delay);
+        }else{clearTimeout(timerMovie)}
+    }
+    movieChanger(10000);
 
-    const handleLogoClick = () => {
+    const handleSatesReset=()=> {
         setKeyword("");
         setSelectedGenres([]);
-        setIsSearchBarOpen(false)
+        setCurrentPage(1);
+        setIsSearchStarted(false)
+
+    }
+
+    const handleLogoClick = () => {
+        handleSatesReset();
+        setIsSearchBarOpen(false);
     };
 
-    const getRandomIntInclusive=(min, max)=> {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-
     const handleClearSearch=()=>{
-        setKeyword("");
+        handleSatesReset();
         document.querySelector("#header__search-input").focus();
     }
+    
+    const searchStopped=keyword.trim().length===0?true:false;
+    
+    //set search started state
+    useEffect(()=>{
+        if(searchStopped) {
+            setIsSearchStarted(false)
+            setKeyword("");
+            return;
+        }
 
+        setIsSearchStarted(true)
+        setCurrentPage(1);
+        
+    },[searchStopped])
+
+    //tikrinimas
+    useEffect(()=>{
+        console.log("isSearchStarted tikrinu", isSearchStarted);
+    },[isSearchStarted])
+
+    //random movie picker for header cover
     const randomMoviePicker = (trendingMovie, data) => {
         const moviePerPage=data.length;
         const randomNumber=getRandomIntInclusive(0, moviePerPage-1);
         if(trendingMovie.id===data[randomNumber].id){
-            setTrendingMovie(data[getRandomIntInclusive(0, moviePerPage-1)]);
-        }else{
-            setTrendingMovie(data[randomNumber]);
+            return setTrendingMovie(data[getRandomIntInclusive(0, moviePerPage-1)]);
         }
-        
+        setTrendingMovie(data[randomNumber]);
     };
     
     //trending movies for carousel and one trending movie for header cover
     useEffect(()=>{
-        console.log("1 efektas. kreipiasi i API")
         setIsLoading(true);
-        axios.get('https://api.themoviedb.org/3/movie/now_playing?api_key='+
-        API_KEY
-        +'&language=en-US&page=1')
+        const url=`https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`;
+        axios.get(url)
         .then(resp=>{
             // console.log("trending movie from api", resp.data.results);
             randomMoviePicker(trendingMovie, resp.data.results);
             setTrendingMovies(resp.data.results);
-            console.log("1 efektas. pabaiga")
-
         })
         .catch((error) => console.log(error))
         .finally(()=>setIsLoading(false));
-        
     },[API_KEY])
     
     
@@ -122,69 +154,56 @@ const Header = () => {
         trendingMovies.length>0 && randomMoviePicker(trendingMovie, trendingMovies);
     },[repeat]);
 
-    //genres on/off when search is started
-    useEffect(() => {
-        if(keyword.trim().length !== 0){
-            setShowGenres(false);
-            setIsSearchStarted(true);
-            setSelectedGenres([]);     
-            
-        }else{
-            setShowGenres(true);
-            setIsSearchStarted(false);
-        }
-    }, [keyword,setShowGenres])
-
+  
     if (isLoading) {
-        // return <div className="loading">Loading...</div>;
         return <Loader/>
     }
     return (
         <header className={!isSearchStarted ?'header':""}>
-        <nav className="header__nav">
-            <div className='header__logo-wrapper'
-            onClick={handleLogoClick}>
-                <img src={logo} alt="logo" /> 
-            </div>
-                {isSearchBarOpen ? 
-                    <div className='header__search-box' 
-                    >
-                        <div className='header__search-icon-wrapper'>
+            <nav className="header__nav">
+                <div className='header__logo-wrapper'
+                onClick={handleLogoClick}>
+                    <img src={logo} alt="logo" /> 
+                </div>
+                    {isSearchBarOpen ? 
+                        <div className='header__search-box' 
+                        >
+                            <div className='header__search-icon-wrapper'>
+                                <img className='header__search-icon' src={searchIcon} alt="search"></img>
+                            </div>
+                            <input
+                            value={keyword}
+                            className='header__search-input' 
+                            id='header__search-input'
+                            type="text" 
+                            placeholder='Search for a movie'
+                            autoFocus
+                            onBlur={()=>keyword.trim().length===0&&setIsSearchBarOpen(false)}
+                            onChange={(e)=>{
+                                setKeyword(e.target.value)
+                            }}
+                            />
+                            <div className='header__delete-icon-wrapper'>
+                                {keyword.trim().length>0 &&
+                                <img 
+                                className='header__delete-icon' 
+                                src={deleteIcon} 
+                                alt="delete search button"
+                                onClick={handleClearSearch}
+                                ></img>
+                                }
+                            </div>
+                        </div>
+                        :
+                        <div className='header__search-icon-wrapper ' onClick={()=>{
+                            setIsSearchBarOpen(true)
+                            }}>
                             <img className='header__search-icon' src={searchIcon} alt="search"></img>
                         </div>
-                        <input
-                        value={keyword}
-                        className='header__search-input' 
-                        id='header__search-input'
-                        type="text" 
-                        placeholder='Search for a movie'
-                        autoFocus
-                        onBlur={()=>!isSearchStarted&&setIsSearchBarOpen(false)}
-                        onChange={(e)=>{
-                            setKeyword(e.target.value)
-                        }}
-                        />
-                        <div className='header__delete-icon-wrapper'>
-                            {isSearchStarted &&
-                            <img 
-                            className='header__delete-icon' 
-                            src={deleteIcon} 
-                            alt="delete search button"
-                            onClick={handleClearSearch}
-                            ></img>
-                            }
-                        </div>
-                    </div>
-                    :
-                    <div className='header__search-icon-wrapper ' onClick={()=>{
-                        setIsSearchBarOpen(true)
-                        }}>
-                        <img className='header__search-icon' src={searchIcon} alt="search"></img>
-                    </div>
-                }
-        </nav>{console.log("renderinasi JSX")}
+                    }
+            </nav>
         {
-            !isSearchStarted  &&
+            keyword.trim().length===0  &&
             <>
             <img className='header__cover-image' 
             src={"https://image.tmdb.org/t/p/w1280"+trendingMovie.backdrop_path} 
@@ -196,11 +215,7 @@ const Header = () => {
                 <div className="header__btns-wrapper">
                     <button 
                     className='header__trailer-btn'
-                    onClick={()=>{
-                        setIsOpened(true)
-                        getTrailer(trendingMovie.id)
-                        setModalData(trendingMovie)
-                    }}
+                    onClick={()=>handleModal(trendingMovie)}
                     >
                     Play trailer
                     </button>

@@ -7,21 +7,16 @@ import CinemaImg from "../../assets/cinema.jpg"
 
 const MovieCard = (props) => {
 const {movie} = props;
-const {getTrailer,setIsOpened,setModalData} = useContext(MainContext);
+const {handleModal} = useContext(MainContext);
   return (
     <div 
     className='movie-card' 
-    onClick={()=>{
-      setModalData(movie)
-      setIsOpened(true)
-      getTrailer(movie.id)
-      }}>
+    onClick={()=> handleModal(movie)}>
         <div className='movie-card__wrapper'>
             <img 
             className='movie-card__poster' 
             src={movie.backdrop_path ? "https://image.tmdb.org/t/p/w780"+movie.backdrop_path : CinemaImg} 
             alt="movie-poster" 
-            loading='lazy'
             
             />
             {!movie.backdrop_path &&

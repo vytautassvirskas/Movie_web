@@ -8,24 +8,26 @@ import YouTube from 'react-youtube';
 import { MdClose } from "react-icons/md";
 
 import MainContext from '../../context/MainContext';
+import Loader from '../Loader/Loader';
 
 import "./MovieModal.css"
 import CinemaImg from "../../assets/cinema.jpg"
 
-const style = {
+// modal box style
+const style = { 
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    maxWidth: "60%",
+    maxWidth: "90vw",
     bgcolor: 'black',
     boxSizing: "border-box",
     border: 'none',
     boxShadow: 24,
 };
-
-const opts = {
-    height: '500px',
+// youtube player options
+const opts = { 
+    maxHeight: '400px',
     width: '100%',
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
@@ -33,10 +35,10 @@ const opts = {
     }
 }
 
-const MovieModal = () => {
-    const {isOpened, setIsOpened, trailer, modalData,  getMovieDetails} = useContext(MainContext);
-    
-  
+const MovieModal = (props) => {
+    const {isLoading} = props;
+    const {isOpened, setIsOpened, modalData} = useContext(MainContext);
+    if(isLoading) return <Loader></Loader>
     return (
         <>
         <Modal
@@ -57,13 +59,14 @@ const MovieModal = () => {
                             <MdClose className='modal__close-btn'></MdClose>
                         </div>
                         <div className='modal__youtube'>
-                            <YouTube videoId={trailer} opts={opts}  />
+                            {modalData.trailerId === null ? <p className='modal__youtube-missing'>NO MOVIE TRAILER FOUND</p> : null}
+                            <YouTube videoId={modalData.trailerId} opts={opts}  />
                         </div>
                         <div className="modal__data">
                             <img 
                             className="modal__cover-poster" 
                             src={modalData.backdrop_path ? "https://image.tmdb.org/t/p/w780"+modalData.backdrop_path : CinemaImg} 
-                            alt="movie-poster"
+                            alt="movie-poster" 
                             ></img>
                             <h1 className='modal__movie-title'>{modalData.title}</h1>
                             <p className='modal__movie-overview'>{modalData.overview}</p>
@@ -71,9 +74,6 @@ const MovieModal = () => {
                                 <span className='modal__movie-rating'>Rating: {modalData.vote_average&& modalData.vote_average.toFixed(1)}</span>
                                 <button 
                                 className="modal__more-btn"
-                                onClick={() => {
-                                    getMovieDetails(modalData.id)
-                                }}
                                 >More info</button>
                             </div>
                         </div>
