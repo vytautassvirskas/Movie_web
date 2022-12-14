@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext,useState} from 'react'
 
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
@@ -13,21 +13,24 @@ import Loader from '../Loader/Loader';
 import "./MovieModal.css"
 import CinemaImg from "../../assets/cinema.jpg"
 
-// modal box style
+// material ui dialog box
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+
+// diaog box style
 const style = { 
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    maxWidth: "90vw",
     bgcolor: 'black',
     boxSizing: "border-box",
     border: 'none',
     boxShadow: 24,
+    padding:0
 };
 // youtube player options
 const opts = { 
-    maxHeight: '400px',
+    // maxHeight: '700px',
+    height:"350px",
     width: '100%',
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
@@ -38,22 +41,36 @@ const opts = {
 const MovieModal = (props) => {
     const {isLoading} = props;
     const {isOpened, setIsOpened, modalData} = useContext(MainContext);
+
+    //dialog box
+    const [scroll, setScroll] = useState('body');
+
+    const descriptionElementRef = React.useRef(null);
+    React.useEffect(() => {
+      if (isOpened) {
+        const { current: descriptionElement } = descriptionElementRef;
+        if (descriptionElement !== null) {
+          descriptionElement.focus();
+        }
+      }
+    }, [isOpened]);
     if(isLoading) return <Loader></Loader>
     return (
         <>
-        <Modal
+        <Dialog
         open={isOpened}
         onClose={() => setIsOpened(false)}
+        scroll={scroll}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
+        aria-labelledby="scroll-dialog-title"
+        aria-describedby="scroll-dialog-description"
         >
             <Fade in={isOpened}>
-                <Box sx={style}>
+            <DialogContent sx={style} dividers={scroll === 'paper'}>
                     <div className='modal'>
                         <div className='modal__close-btn-wrapper' onClick={() => setIsOpened(false)}>
                             <MdClose className='modal__close-btn'></MdClose>
@@ -79,9 +96,9 @@ const MovieModal = (props) => {
                         </div>
                     </div>
                 
-                </Box>
+                    </DialogContent>
             </Fade>
-        </Modal>
+        </Dialog>
         </>
     )
 }
