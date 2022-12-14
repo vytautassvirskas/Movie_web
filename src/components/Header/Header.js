@@ -106,6 +106,10 @@ const Header = () => {
     
     const searchStopped=keyword.trim().length===0?true:false;
     
+    useEffect(()=>{
+        console.log("ilgis keyword", keyword.trim().length)
+    },[keyword])
+
     //set search started state
     useEffect(()=>{
         if(searchStopped) {

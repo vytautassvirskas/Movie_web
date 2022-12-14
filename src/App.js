@@ -33,7 +33,6 @@ function App() {
       // console.log("trailer APIE resp: ", results)
       results.length===0 && setModalData(currentModalData=> {return {...currentModalData, trailerId: null}})
 
-
       results.forEach(result=>{
         if(result.name==="Official Trailer"){
           setModalData((currentModalData)=> {

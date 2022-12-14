@@ -19,15 +19,14 @@ export function useDebounce(value, delay) {
       setDebounceValue(value);
     }, delay);
 
-    return () => clearTimeout(timeoutId);
-  }, [value,delay]);
 
+    return () => {
+      clearTimeout(timeoutId)};
+  }, [value,delay]);
   return debounceValue.trim();
 }
-
 const Main = () => {
   const [movies, setMovies] = useState([]);
-  // const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const {keyword,selectedGenres,currentPage, setCurrentPage} = useContext(MainContext);
@@ -37,7 +36,7 @@ const Main = () => {
 
   //fetch popular movies
   useEffect(() => {
-      if (keyword.trim().length===0) 
+      if (debounceKeyword.length===0) 
     { 
       setIsLoading(true);
       Axios.get("https://api.themoviedb.org/3/discover/movie?api_key="
@@ -64,7 +63,7 @@ const Main = () => {
               setIsLoading(false);
           })
       }
-  },[API_KEY, currentPage, keyword, selectedGenres])
+  },[API_KEY, currentPage, debounceKeyword, selectedGenres])
 
 
   //search
@@ -106,12 +105,9 @@ const Main = () => {
   if(isLoading) return <Loader/>
   return (
     <>
-    
       {
         movies.length>0 ?
         <main className='main'>
-          
-          
           <div className='main__pagination-container'>
             <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
           </div>
@@ -142,7 +138,6 @@ const Main = () => {
           {selectedGenres.length>0&&movies.length===0 ? 
           <>
           <main className='main'>
-            <Genres setCurrentPage={setCurrentPage}></Genres>
             <div className="message">
               <h2 className='message__text'>No movies found by those genres combination.</h2>  
             </div>

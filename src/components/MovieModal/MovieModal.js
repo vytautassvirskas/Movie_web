@@ -72,9 +72,9 @@ const MovieModal = (props) => {
                             <p className='modal__movie-overview'>{modalData.overview}</p>
                             <div className="modal__data-bottom">
                                 <span className='modal__movie-rating'>Rating: {modalData.vote_average&& modalData.vote_average.toFixed(1)}</span>
-                                <button 
+                                {/* <button 
                                 className="modal__more-btn"
-                                >More info</button>
+                                >More info</button> */}
                             </div>
                         </div>
                     </div>
