@@ -209,3 +209,22 @@
         padding: 0 40px
     }
 }
+
+@media (height<=600px){
+    .header{
+        height: auto;
+    }
+    .header__cover-title{
+        font-size: 2rem;
+    }
+    .header__cover-data{
+        max-width: 80%;
+    }
+    .header__trailer-btn{
+        font-size: 1rem;
+        padding: 8px 10px
+    }
+    .header__cover-overview{
+        -webkit-line-clamp: 3;
+    }
+}

@@ -107,7 +107,7 @@ const Main = () => {
     <>
       {
         movies.length>0 ?
-        <main className='main'>
+        <>
           <div className='main__pagination-container'>
             <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
           </div>
@@ -123,7 +123,7 @@ const Main = () => {
           <div className='main__pagination-container'>
             <Pagination totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
           </div>
-        </main>
+        </>
         :
         <>
           {debounceKeyword.length>0&&movies.length===0
@@ -137,11 +137,11 @@ const Main = () => {
           : null}
           {selectedGenres.length>0&&movies.length===0 ? 
           <>
-          <main className='main'>
+          <>
             <div className="message">
               <h2 className='message__text'>No movies found by those genres combination.</h2>  
             </div>
-          </main>
+          </>
           </>
           : null}
         </>

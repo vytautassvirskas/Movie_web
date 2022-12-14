@@ -87,9 +87,11 @@ function App() {
     <>
       <MainContext.Provider value={contextValues}>
         <Header />
-        <Genres/>
-        <MovieModal/>
-        <Main/>
+        <main className='main'>
+          <Genres/>
+          <MovieModal/>
+          <Main/>
+        </main>
       </MainContext.Provider>
     </>
   );
