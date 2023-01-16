@@ -21,8 +21,8 @@ Movie website with features:
 
 ### Screenshot
 
-![](./src/assets/images/screenshot1.jpg)
-![](./src/assets/images/screenshot2.jpg)
+![](./src/assets/screenshot1.jpg)
+![](./src/assets/screenshot2.jpg)
 
 ### Links
 
